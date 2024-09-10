@@ -29,8 +29,8 @@ bool has_self_loop__pcmpistri(uint16_t vertex, uint16_t *neighbors, uint16_t num
   for (uint16_t i = 0; i < num_neighbors; i += 8) {
     __m128i neighbor_vec = _mm_loadu_si128((__m128i *)&neighbors[i]);
 
-    // int result = _mm_cmpistri(vertex_vec, neighbor_vec, FLAGS);
-    int result = _mm_cmpestri(vertex_vec, 1, neighbor_vec, 8, FLAGS);
+    int result = _mm_cmpistri(vertex_vec, neighbor_vec, FLAGS);
+    // int result = _mm_cmpestri(vertex_vec, 1, neighbor_vec, 8, FLAGS);
 
     if (result != 8) {
       return true;

@@ -18,13 +18,13 @@ graph_t make_test_graph(bool should_have_self_loop) {
     PANIC("malloc failed\n");
   }
 
-  for (uint16_t i = 0; i < NUM_VERTICES; ++i) {
-    if (!(graph.adjacencies[i] = malloc(NUM_NEIGHBORS_EACH * sizeof(uint16_t)))) {
+  for (uint16_t v = 0; v < NUM_VERTICES; ++v) {
+    if (!(graph.adjacencies[v] = malloc(NUM_NEIGHBORS_EACH * sizeof(uint16_t)))) {
       PANIC("malloc failed\n");
     }
-    graph.arrays_lengths[i] = NUM_NEIGHBORS_EACH;
-    for (uint16_t j = 0; j < NUM_NEIGHBORS_EACH; ++j) {
-      graph.adjacencies[i][j] = ((i + j) % NUM_VERTICES) + 1;
+    graph.arrays_lengths[v] = NUM_NEIGHBORS_EACH;
+    for (uint16_t n = 0; n < NUM_NEIGHBORS_EACH; ++n) {
+      graph.adjacencies[v][n] = ((v + n) % NUM_VERTICES) + 1;
     }
   }
 
