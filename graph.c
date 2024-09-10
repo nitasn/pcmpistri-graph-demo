@@ -5,6 +5,8 @@
 
 
 bool has_self_loop__naive(uint16_t vertex, uint16_t *neighbors, uint16_t num_neighbors) {
+  printf("naive\n");
+
   for (uint16_t i = 0; i < num_neighbors; ++i) {
     if (neighbors[i] == vertex) {
       return true;
@@ -14,6 +16,8 @@ bool has_self_loop__naive(uint16_t vertex, uint16_t *neighbors, uint16_t num_nei
 }
 
 bool has_self_loop__pcmpistri(uint16_t vertex, uint16_t *neighbors, uint16_t num_neighbors) {
+  printf("pcmpistri\n");
+  
   // for simplicity, assume each vertex's num_neighbors is a multiple of 8
   assert(num_neighbors % 8 == 0);
 
