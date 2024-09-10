@@ -1,6 +1,9 @@
 #include "graph.h"
 #include "common.h"
 
+#include <ctype.h> // for tolower
+
+
 graph_t make_test_graph() {
   const int NUM_VERTICES = 65537;
   const int NUM_NEIGHBORS_EACH = 65536;
@@ -25,21 +28,39 @@ graph_t make_test_graph() {
     }
   }
 
-  // make last neighbor of last vertex a self loop
-  graph.adjacencies[NUM_VERTICES - 1][NUM_NEIGHBORS_EACH - 1] = NUM_VERTICES - 1;
+  // make a self loop
+  graph.adjacencies[42042][7777] = 42042;
 
   return graph;
 }
 
+bool prompt_boolean_question(const char *question) {
+  char input;
+  while (true) {
+    printf("%s [y, n]", question);
+    scanf(" %c", &input);
+    input = tolower(input);
+    if (input != 'y' && input != 'n') {
+      printf("invalid respond...\n");
+    } else {
+      return input == 'y';
+    }
+  }
+}
+
 int main(void) {
-  graph_t graph = make_test_graph();
+  while (true) {
+    bool should_include_self_loop = prompt_boolean_question("include a self loop?");
+    printf("you answered: %s", should_include_self_loop ? "true" : "false");
+  }
+  // graph_t graph = make_test_graph();
 
-  START_TIMER(work);
-  int has_self_loop = graph_has_self_loop(graph);
-  PRINT_TIMER(work);
+  // START_TIMER(work);
+  // int has_self_loop = graph_has_self_loop(graph);
+  // PRINT_TIMER(work);
 
-  printf("graph has self-loop(s) ? %s\n", has_self_loop ? "yes" : "no");
+  // printf("graph has self-loop(s) ? %s\n", has_self_loop ? "yes" : "no");
   
-  free_graph(graph);
-  return 0;
+  // free_graph(graph);
+  // return 0;
 }
