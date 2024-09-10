@@ -6,7 +6,7 @@ LDFLAGS = -no-pie -lm -g
 SRC = $(wildcard *.c)
 OBJ = $(SRC:.c=.o)
 
-all: a.out
+.PHONY: clean run
 
 a.out: $(OBJ)
 	$(CC) $(LDFLAGS) -o $@ $^
@@ -16,3 +16,6 @@ a.out: $(OBJ)
 
 clean:
 	rm -f $(OBJ) a.out
+
+run: a.out
+	./a.out
