@@ -6,13 +6,13 @@ LDFLAGS = -no-pie -lm -g
 SRC = $(wildcard *.c)
 OBJ = $(SRC:.c=.o)
 
-all: main
+all: a.out
 
-main: $(OBJ)
+a.out: $(OBJ)
 	$(CC) $(LDFLAGS) -o $@ $^
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -f $(OBJ) main
+	rm -f $(OBJ) a.out
