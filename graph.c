@@ -4,8 +4,8 @@
 #include <smmintrin.h>  // for SSE4.2
 
 
-bool has_self_loop__naive(unsigned short vertex, unsigned short *neighbors, int num_neighbors) {
-  for (int i = 0; i < num_neighbors; ++i) {
+bool has_self_loop__naive(uint16_t vertex, uint16_t *neighbors, uint16_t num_neighbors) {
+  for (uint16_t i = 0; i < num_neighbors; ++i) {
     if (neighbors[i] == vertex) {
       return true;
     }
@@ -13,14 +13,14 @@ bool has_self_loop__naive(unsigned short vertex, unsigned short *neighbors, int 
   return false;
 }
 
-bool has_self_loop__pcmpistri(unsigned short vertex, unsigned short *neighbors, int num_neighbors) {
+bool has_self_loop__pcmpistri(uint16_t vertex, uint16_t *neighbors, uint16_t num_neighbors) {
     // for simplicity, assume each vertex's num_neighbors is a multiple of 8
     assert(num_neighbors % 8 == 0);
 
     // Create a vector with the vertex ID in the least significant 16 bits
     __m128i vertex_vec = _mm_set1_epi16(vertex);
 
-    for (int i = 0; i < num_neighbors; i += 8) {
+    for (uint16_t i = 0; i < num_neighbors; i += 8) {
         __m128i neighbor_vec = _mm_loadu_si128((__m128i *)&neighbors[i]);
 
         // Use PCMPISTRI to compare 8 16-bit integers at once
@@ -44,11 +44,11 @@ bool has_self_loop__pcmpistri(unsigned short vertex, unsigned short *neighbors, 
 
 bool graph_has_self_loop(graph_t graph, bool should_use_pcmpistri) {
 
-  bool (*has_self_loop)(unsigned short, unsigned short*, int) =
+  bool (*has_self_loop)(uint16_t, uint16_t*, uint16_t) =
     should_use_pcmpistri ? has_self_loop__pcmpistri : has_self_loop__naive;
 
-  for (int v = 0; v < graph.num_vertices; ++v) {
-    int num_neighbors = graph.arrays_lengths[v];
+  for (uint16_t v = 0; v < graph.num_vertices; ++v) {
+    uint16_t num_neighbors = graph.arrays_lengths[v];
 
     if (has_self_loop(v, graph.adjacencies[v], num_neighbors)) {
       return true;
@@ -58,8 +58,8 @@ bool graph_has_self_loop(graph_t graph, bool should_use_pcmpistri) {
   return false;
 }
 
-// bool has_self_loop(unsigned short vertex, unsigned short *neighbors, int num_neighbors) {
-//   for (int i = 0; i < num_neighbors; ++i) {
+// bool has_self_loop(uint16_t vertex, uint16_t *neighbors, uint16_t num_neighbors) {
+//   for (uint16_t i = 0; i < num_neighbors; ++i) {
 //     if (neighbors[i] == vertex) {
 //       return true;
 //     }
@@ -67,21 +67,21 @@ bool graph_has_self_loop(graph_t graph, bool should_use_pcmpistri) {
 //   return false;
 // }
 
-// bool has_self_loop(unsigned short vertex, unsigned short *neighbors, int num_neighbors) {
+// bool has_self_loop(uint16_t vertex, uint16_t *neighbors, uint16_t num_neighbors) {
 //   // for simplicity, assume each vertex's num_neighbors is a multiple of 8
 //   assert(num_neighbors % 8 == 0);
 
 //   // Create a vector with 8 copies of the vertex ID
 //   __m128i vertex_vec = _mm_set1_epi16(vertex);
 
-//   for (int i = 0; i < num_neighbors; i += 8) {
+//   for (uint16_t i = 0; i < num_neighbors; i += 8) {
 //     __m128i neighbors_vec = _mm_loadu_si128((__m128i *)&neighbors[i]);
 
 //     // Compare each 16-bit integer in neighbor_vec with vertex_vec
 //     __m128i cmp_result = _mm_cmpeq_epi16(neighbors_vec, vertex_vec);
 
 //     // Convert the comparison result to a bitmask
-//     int mask = _mm_movemask_epi8(cmp_result);
+//     uint16_t mask = _mm_movemask_epi8(cmp_result);
 
 //     if (mask != 0) {
 //       return true;
@@ -92,7 +92,7 @@ bool graph_has_self_loop(graph_t graph, bool should_use_pcmpistri) {
 // }
 
 void free_graph(graph_t graph) {
-  for (int i = 0; i < graph.num_vertices; ++i) {
+  for (uint16_t i = 0; i < graph.num_vertices; ++i) {
     free(graph.adjacencies[i]);
   }
   free(graph.adjacencies);

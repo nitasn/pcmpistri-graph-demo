@@ -5,25 +5,25 @@
 
 
 graph_t make_test_graph(bool should_have_self_loop) {
-  const int NUM_VERTICES = 65537;
-  const int NUM_NEIGHBORS_EACH = 65536;
+  const uint16_t NUM_VERTICES = 65400;
+  const uint16_t NUM_NEIGHBORS_EACH = 65000;
 
   graph_t graph = {
     .adjacencies = malloc(NUM_VERTICES * sizeof(unsigned short *)),
     .num_vertices = NUM_VERTICES,
-    .arrays_lengths = malloc(NUM_VERTICES * sizeof(int))
+    .arrays_lengths = malloc(NUM_VERTICES * sizeof(uint16_t))
   };
 
   if (!graph.adjacencies || !graph.arrays_lengths) {
     PANIC("malloc failed\n");
   }
 
-  for (int i = 0; i < NUM_VERTICES; ++i) {
+  for (uint16_t i = 0; i < NUM_VERTICES; ++i) {
     if (!(graph.adjacencies[i] = malloc(NUM_NEIGHBORS_EACH * sizeof(unsigned short)))) {
       PANIC("malloc failed\n");
     }
     graph.arrays_lengths[i] = NUM_NEIGHBORS_EACH;
-    for (int j = 0; j < NUM_NEIGHBORS_EACH; ++j) {
+    for (uint16_t j = 0; j < NUM_NEIGHBORS_EACH; ++j) {
       graph.adjacencies[i][j] = (i + j + 1) % NUM_VERTICES;
     }
   }
@@ -56,7 +56,7 @@ int main(void) {
   graph_t graph = make_test_graph(should_have_self_loop);
 
   START_TIMER(Algorithm);
-  int algo_result = graph_has_self_loop(graph, should_use_pcmpistri);
+  bool algo_result = graph_has_self_loop(graph, should_use_pcmpistri);
   PRINT_TIMER(Algorithm);
 
   printf("Self-loop(s) %s\n", algo_result ? "DETECTED" : "NOT detected");

@@ -4,9 +4,9 @@
 #include "common.h"
 
 typedef struct {
-  unsigned short **adjacencies;
-  int num_vertices;
-  int *arrays_lengths;
+  uint16_t **adjacencies;
+  uint16_t num_vertices;
+  uint16_t *arrays_lengths;
 } graph_t;
 
 void free_graph(graph_t graph);
