@@ -1,20 +1,18 @@
 CC = gcc
 AS = as
-CFLAGS = -Wall -O0 -g -m64
+CFLAGS = -Wall -Wextra -O0 -g -m64 -msse4.2
 LDFLAGS = -no-pie -lm -g
+
+SRC = $(wildcard *.c)
+OBJ = $(SRC:.c=.o)
 
 all: main
 
-main: main.o hamming.o
+main: $(OBJ)
 	$(CC) $(LDFLAGS) -o $@ $^
 
-main.o: main.c
-	$(CC) $(CFLAGS) -c $<
-
-hamming.o: hamming.s
-	$(AS) --64 -o $@ $<
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -f *.o main
-
-.PHONY: all clean
+	rm -f $(OBJ) main
