@@ -15,27 +15,33 @@ bool graph_has_self_loop(graph_t graph) {
   return false;
 }
 
+// bool vertex_has_self_loop(unsigned short vertex, unsigned short *neighbors, int num_neighbors) {
+//   // for simplicity, assume each vertex's num_neighbors is a multiple of 8
+//   assert(num_neighbors % 8 == 0);
+
+//   for (int i = 0; i < num_neighbors; ++i) {
+//     if (neighbors[i] == vertex) {
+//       return true;
+//     }
+//   }
+
+//   return false;
+// }
+
 bool vertex_has_self_loop(unsigned short vertex, unsigned short *neighbors, int num_neighbors) {
   // for simplicity, assume each vertex's num_neighbors is a multiple of 8
   assert(num_neighbors % 8 == 0);
 
-  for (int i = 0; i < num_neighbors; ++i) {
-    if (neighbors[i] == vertex) {
-      return true;
-    }
-  }
-
-  return false;
-
-  unsigned short self_id[8] = { vertex };
-  __m128i xmm0 = _mm_loadu_si128((__m128i *)self_id);
+  // Create a vector with 8 copies of the vertex ID
+  __m128i xmm0 = _mm_set1_epi16(vertex);
 
   for (int i = 0; i < num_neighbors; i += 8) {
     __m128i xmm1 = _mm_loadu_si128((__m128i *)&neighbors[i]);
 
-    int index = _mm_cmpistri(xmm1, xmm0, _SIDD_UWORD_OPS | _SIDD_CMP_EQUAL_EACH | _SIDD_LEAST_SIGNIFICANT);
+    // Compare each 16-bit integer in xmm1 with xmm0
+    int mask = _mm_cmpestri(xmm0, 8, xmm1, 8, _SIDD_UWORD_OPS | _SIDD_CMP_EQUAL_ANY | _SIDD_BIT_MASK);
 
-    if (index < 8) {
+    if (mask != 0) {
       return true;
     }
   }
