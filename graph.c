@@ -19,8 +19,21 @@ bool vertex_has_self_loop(unsigned short vertex, unsigned short *neighbors, int 
   // for simplicity, assume each vertex's num_neighbors is a multiple of 8
   assert(num_neighbors % 8 == 0);
 
-  for (int i = 0; i < num_neighbors; ++i) {
-    if (neighbors[i] == vertex) {
+  // for (int i = 0; i < num_neighbors; ++i) {
+  //   if (neighbors[i] == vertex) {
+  //     return true;
+  //   }
+  // }
+
+  unsigned short to_find[8] = { vertex };
+  __m128i xmm0 = _mm_loadu_si128((__m128i *)to_find);
+
+  for (int i = 0; i < num_neighbors; i += 8) {
+    __m128i xmm1 = _mm_loadu_si128((__m128i *)&neighbors[i]);
+
+    int index = _mm_cmpistri(xmm1, xmm0, _SIDD_UWORD_OPS | _SIDD_CMP_EQUAL_EACH | _SIDD_LEAST_SIGNIFICANT);
+
+    if (index < 8) {
       return true;
     }
   }
