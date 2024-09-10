@@ -25,6 +25,8 @@ bool vertex_has_self_loop(unsigned short vertex, unsigned short *neighbors, int 
     }
   }
 
+  return false;
+
   unsigned short self_id[8] = { vertex };
   __m128i xmm0 = _mm_loadu_si128((__m128i *)self_id);
 
