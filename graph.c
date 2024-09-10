@@ -1,7 +1,7 @@
 #include "graph.h"
 
 #include <assert.h>
-// #include <smmintrin.h>  // for SSE4.2
+#include <smmintrin.h>  // for SSE4.2
 
 bool graph_has_self_loop(graph_t graph) {
   for (int i = 0; i < graph.num_vertices; ++i) {
