@@ -3,4 +3,4 @@
 *.out
 *.o
 *.qcow2
-cmd.sh
+*.sh
