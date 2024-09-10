@@ -19,11 +19,11 @@ bool vertex_has_self_loop(unsigned short vertex, unsigned short *neighbors, int 
   // for simplicity, assume each vertex's num_neighbors is a multiple of 8
   assert(num_neighbors % 8 == 0);
 
-  // for (int i = 0; i < num_neighbors; ++i) {
-  //   if (neighbors[i] == vertex) {
-  //     return true;
-  //   }
-  // }
+  for (int i = 0; i < num_neighbors; ++i) {
+    if (neighbors[i] == vertex) {
+      return true;
+    }
+  }
 
   unsigned short self_id[8] = { vertex };
   __m128i xmm0 = _mm_loadu_si128((__m128i *)self_id);
