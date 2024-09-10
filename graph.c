@@ -33,13 +33,16 @@ bool vertex_has_self_loop(unsigned short vertex, unsigned short *neighbors, int 
   assert(num_neighbors % 8 == 0);
 
   // Create a vector with 8 copies of the vertex ID
-  __m128i xmm0 = _mm_set1_epi16(vertex);
+  __m128i vertex_vec = _mm_set1_epi16(vertex);
 
   for (int i = 0; i < num_neighbors; i += 8) {
-    __m128i xmm1 = _mm_loadu_si128((__m128i *)&neighbors[i]);
+    __m128i neighbor_vec = _mm_loadu_si128((__m128i *)&neighbors[i]);
 
-    // Compare each 16-bit integer in xmm1 with xmm0
-    int mask = _mm_cmpestri(xmm0, 8, xmm1, 8, _SIDD_UWORD_OPS | _SIDD_CMP_EQUAL_ANY | _SIDD_BIT_MASK);
+    // Compare each 16-bit integer in neighbor_vec with vertex_vec
+    __m128i cmp_result = _mm_cmpeq_epi16(neighbor_vec, vertex_vec);
+
+    // Convert the comparison result to a bitmask
+    int mask = _mm_movemask_epi8(cmp_result);
 
     if (mask != 0) {
       return true;
