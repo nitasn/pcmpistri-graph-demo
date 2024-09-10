@@ -13,7 +13,5 @@ void free_graph(graph_t graph);
 
 bool graph_has_self_loop(graph_t graph);
 
-bool vertex_has_self_loop(unsigned short vertex, unsigned short *neighbors, int num_neighbors);
-
 #endif
 
