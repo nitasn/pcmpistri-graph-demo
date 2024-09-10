@@ -55,11 +55,11 @@ int main(void) {
 
   graph_t graph = make_test_graph(should_have_self_loop);
 
-  START_TIMER(work);
-  int has_self_loop = graph_has_self_loop(graph, should_use_pcmpistri);
-  PRINT_TIMER(work);
+  START_TIMER(Algorithm);
+  int algo_result = graph_has_self_loop(graph, should_use_pcmpistri);
+  PRINT_TIMER(Algorithm);
 
-  printf("graph has self-loop(s) ? %s\n", has_self_loop ? "yes" : "no");
+  printf("Self-loop(s) %s\n", algo_result ? "DETECTED" : "NOT detected");
   
   free_graph(graph);
   return 0;
