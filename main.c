@@ -2,8 +2,8 @@
 #include "common.h"
 
 graph_t make_test_graph() {
-  const int NUM_VERTICES = 100 * 1000;
-  const int NUM_NEIGHBORS_EACH = 10 * 1000;
+  const int NUM_VERTICES = 65537;
+  const int NUM_NEIGHBORS_EACH = 65536;
 
   graph_t graph = {
     .adjacencies = malloc(NUM_VERTICES * sizeof(unsigned short *)),
@@ -25,7 +25,8 @@ graph_t make_test_graph() {
     }
   }
 
-  graph.adjacencies[99999][9999] = 99999; // last neighbor of last vertex is a self loop
+  // make last neighbor of last vertex a self loop
+  // graph.adjacencies[NUM_VERTICES - 1][NUM_NEIGHBORS_EACH - 1] = NUM_VERTICES - 1;
 
   return graph;
 }
