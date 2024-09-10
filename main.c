@@ -24,9 +24,8 @@ graph_t make_test_graph(bool should_have_self_loop) {
     }
     graph.arrays_lengths[i] = NUM_NEIGHBORS_EACH;
     for (uint16_t j = 0; j < NUM_NEIGHBORS_EACH; ++j) {
-      graph.adjacencies[i][j] = (i + j + 1) % NUM_VERTICES;
+      graph.adjacencies[i][j] = ((i + j) % NUM_VERTICES) + 1;
     }
-    graph.adjacencies[i][NUM_VERTICES - i - 1] = NUM_VERTICES - i - 1;
   }
 
   if (should_have_self_loop) {
