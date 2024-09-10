@@ -7,8 +7,6 @@
 graph_t make_test_graph(bool should_have_self_loop) {
   const uint16_t NUM_VERTICES = 65000;
   const uint16_t NUM_NEIGHBORS_EACH = 64000;
-  // const uint16_t NUM_VERTICES = 24;
-  // const uint16_t NUM_NEIGHBORS_EACH = 16;
 
   graph_t graph = {
     .adjacencies = malloc(NUM_VERTICES * sizeof(uint16_t *)),
@@ -28,6 +26,7 @@ graph_t make_test_graph(bool should_have_self_loop) {
     for (uint16_t j = 0; j < NUM_NEIGHBORS_EACH; ++j) {
       graph.adjacencies[i][j] = (i + j + 1) % NUM_VERTICES;
     }
+    graph.adjacencies[i][NUM_VERTICES - i - 1] = NUM_VERTICES - i - 1;
   }
 
   if (should_have_self_loop) {
