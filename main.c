@@ -26,7 +26,7 @@ graph_t make_test_graph() {
   }
 
   // make last neighbor of last vertex a self loop
-  // graph.adjacencies[NUM_VERTICES - 1][NUM_NEIGHBORS_EACH - 1] = NUM_VERTICES - 1;
+  graph.adjacencies[NUM_VERTICES - 1][NUM_NEIGHBORS_EACH - 1] = NUM_VERTICES - 1;
 
   return graph;
 }
