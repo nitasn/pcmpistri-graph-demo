@@ -5,28 +5,31 @@
 
 
 bool vertex_has_self_loop(unsigned short vertex, unsigned short *neighbors, int num_neighbors) {
-  // for simplicity, assume each vertex's num_neighbors is a multiple of 8
-  assert(num_neighbors % 8 == 0);
+    // for simplicity, assume each vertex's num_neighbors is a multiple of 8
+    assert(num_neighbors % 8 == 0);
 
-  // Create a vector with 8 copies of the vertex ID
-  __m128i vertex_vec = _mm_set1_epi16(vertex);
+    // Create a vector with the vertex ID in the least significant 16 bits
+    __m128i vertex_vec = _mm_set1_epi16(vertex);
 
-  for (int i = 0; i < num_neighbors; i += 8) {
-    __m128i neighbor_vec = _mm_loadu_si128((__m128i *)&neighbors[i]);
+    for (int i = 0; i < num_neighbors; i += 8) {
+        __m128i neighbor_vec = _mm_loadu_si128((__m128i *)&neighbors[i]);
 
-    // Use PCMPISTRI to compare 8 16-bit integers at once
-    // _SIDD_UWORD_OPS: treat the data as 16-bit integers
-    // _SIDD_CMP_EQUAL_ANY: return index of first match
-    // _SIDD_NEGATIVE_POLARITY: invert the meaning of _SIDD_CMP_EQUAL_ANY
-    // const int flags = _SIDD_UWORD_OPS | _SIDD_CMP_EQUAL_ANY | _SIDD_NEGATIVE_POLARITY;
-    int index = _mm_cmpistri(vertex_vec, neighbor_vec, _SIDD_UWORD_OPS | _SIDD_CMP_EQUAL_ANY | _SIDD_NEGATIVE_POLARITY);
+        // Use PCMPISTRI to compare 8 16-bit integers at once
+        // _SIDD_UWORD_OPS: treat the data as 16-bit integers
+        // _SIDD_CMP_EQUAL_ANY: check for equality with any
+        // _SIDD_LEAST_SIGNIFICANT: start comparison from least significant bit
+        int result = _mm_cmpistri(vertex_vec, neighbor_vec, 
+                                  _SIDD_UWORD_OPS | _SIDD_CMP_EQUAL_ANY | _SIDD_LEAST_SIGNIFICANT);
 
-    if (index != 8) {
-      return true;  // Match found
+        if (result != 8) {
+            // Double-check the potential match
+            if (neighbors[i + result] == vertex) {
+                return true;  // Confirmed match
+            }
+        }
     }
-  }
 
-  return false;  // No match found
+    return false;  // No match found
 }
 
 
