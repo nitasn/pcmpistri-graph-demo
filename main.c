@@ -9,7 +9,7 @@ graph_t make_test_graph(bool should_have_self_loop) {
   const uint16_t NUM_NEIGHBORS_EACH = 65000;
 
   graph_t graph = {
-    .adjacencies = malloc(NUM_VERTICES * sizeof(unsigned short *)),
+    .adjacencies = malloc(NUM_VERTICES * sizeof(uint16_t *)),
     .num_vertices = NUM_VERTICES,
     .arrays_lengths = malloc(NUM_VERTICES * sizeof(uint16_t))
   };
@@ -19,7 +19,7 @@ graph_t make_test_graph(bool should_have_self_loop) {
   }
 
   for (uint16_t i = 0; i < NUM_VERTICES; ++i) {
-    if (!(graph.adjacencies[i] = malloc(NUM_NEIGHBORS_EACH * sizeof(unsigned short)))) {
+    if (!(graph.adjacencies[i] = malloc(NUM_NEIGHBORS_EACH * sizeof(uint16_t)))) {
       PANIC("malloc failed\n");
     }
     graph.arrays_lengths[i] = NUM_NEIGHBORS_EACH;
