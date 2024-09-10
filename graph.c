@@ -4,7 +4,16 @@
 #include <smmintrin.h>  // for SSE4.2
 
 
-bool vertex_has_self_loop(unsigned short vertex, unsigned short *neighbors, int num_neighbors) {
+bool has_self_loop__naive(unsigned short vertex, unsigned short *neighbors, int num_neighbors) {
+  for (int i = 0; i < num_neighbors; ++i) {
+    if (neighbors[i] == vertex) {
+      return true;
+    }
+  }
+  return false;
+}
+
+bool has_self_loop__pcmpistri(unsigned short vertex, unsigned short *neighbors, int num_neighbors) {
     // for simplicity, assume each vertex's num_neighbors is a multiple of 8
     assert(num_neighbors % 8 == 0);
 
@@ -33,11 +42,15 @@ bool vertex_has_self_loop(unsigned short vertex, unsigned short *neighbors, int 
 }
 
 
-bool graph_has_self_loop(graph_t graph) {
-  for (int i = 0; i < graph.num_vertices; ++i) {
-    int num_neighbors = graph.arrays_lengths[i];
+bool graph_has_self_loop(graph_t graph, bool should_use_pcmpistri) {
 
-    if (vertex_has_self_loop(i, graph.adjacencies[i], num_neighbors)) {
+  bool (*has_self_loop)(unsigned short, unsigned short*, int) =
+    should_use_pcmpistri ? has_self_loop__pcmpistri : has_self_loop__naive;
+
+  for (int v = 0; v < graph.num_vertices; ++v) {
+    int num_neighbors = graph.arrays_lengths[v];
+
+    if (has_self_loop(v, graph.adjacencies[v], num_neighbors)) {
       return true;
     }
   }
@@ -45,7 +58,7 @@ bool graph_has_self_loop(graph_t graph) {
   return false;
 }
 
-// bool vertex_has_self_loop(unsigned short vertex, unsigned short *neighbors, int num_neighbors) {
+// bool has_self_loop(unsigned short vertex, unsigned short *neighbors, int num_neighbors) {
 //   for (int i = 0; i < num_neighbors; ++i) {
 //     if (neighbors[i] == vertex) {
 //       return true;
@@ -54,7 +67,7 @@ bool graph_has_self_loop(graph_t graph) {
 //   return false;
 // }
 
-// bool vertex_has_self_loop(unsigned short vertex, unsigned short *neighbors, int num_neighbors) {
+// bool has_self_loop(unsigned short vertex, unsigned short *neighbors, int num_neighbors) {
 //   // for simplicity, assume each vertex's num_neighbors is a multiple of 8
 //   assert(num_neighbors % 8 == 0);
 

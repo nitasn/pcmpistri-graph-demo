@@ -4,7 +4,7 @@
 #include <ctype.h> // for tolower
 
 
-graph_t make_test_graph() {
+graph_t make_test_graph(bool should_have_self_loop) {
   const int NUM_VERTICES = 65537;
   const int NUM_NEIGHBORS_EACH = 65536;
 
@@ -28,8 +28,9 @@ graph_t make_test_graph() {
     }
   }
 
-  // make a self loop
-  graph.adjacencies[42042][7777] = 42042;
+  if (should_have_self_loop) {
+    graph.adjacencies[42042][7777] = 42042;
+  }
 
   return graph;
 }
@@ -49,18 +50,17 @@ bool prompt_boolean_question(const char *question) {
 }
 
 int main(void) {
-  while (true) {
-    bool should_include_self_loop = prompt_boolean_question("include a self loop?");
-    printf("you answered: %s", should_include_self_loop ? "true" : "false");
-  }
-  // graph_t graph = make_test_graph();
+  bool should_have_self_loop = prompt_boolean_question("Should the graph have a self-loop?");
+  bool should_use_pcmpistri = prompt_boolean_question("Should the algorithm use PCMPISTRI?");
 
-  // START_TIMER(work);
-  // int has_self_loop = graph_has_self_loop(graph);
-  // PRINT_TIMER(work);
+  graph_t graph = make_test_graph(should_have_self_loop);
 
-  // printf("graph has self-loop(s) ? %s\n", has_self_loop ? "yes" : "no");
+  START_TIMER(work);
+  int has_self_loop = graph_has_self_loop(graph, should_use_pcmpistri);
+  PRINT_TIMER(work);
+
+  printf("graph has self-loop(s) ? %s\n", has_self_loop ? "yes" : "no");
   
-  // free_graph(graph);
-  // return 0;
+  free_graph(graph);
+  return 0;
 }

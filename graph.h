@@ -11,7 +11,7 @@ typedef struct {
 
 void free_graph(graph_t graph);
 
-bool graph_has_self_loop(graph_t graph);
+bool graph_has_self_loop(graph_t graph, bool should_use_pcmpistri);
 
 #endif
 
