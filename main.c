@@ -25,6 +25,8 @@ graph_t make_test_graph() {
     }
   }
 
+  graph.adjacencies[99999][9999] = 99999; // last neighbor of last vertex is a self loop
+
   return graph;
 }
 
