@@ -37,7 +37,7 @@ graph_t make_test_graph() {
 bool prompt_boolean_question(const char *question) {
   char input;
   while (true) {
-    printf("%s [y, n]", question);
+    printf("%s [y, n] ", question);
     scanf(" %c", &input);
     input = tolower(input);
     if (input != 'y' && input != 'n') {
