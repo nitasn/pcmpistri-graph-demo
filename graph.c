@@ -20,7 +20,7 @@ bool has_self_loop__pcmpistri(uint16_t vertex, uint16_t *neighbors, uint16_t num
   // Create a vector with the vertex ID in the least significant 16 bits
   __m128i vertex_vec = _mm_set1_epi16(vertex);
 
-  // Use PCMPISTRI to compare 8 16-bit integers at once
+  // We'll use PCMPISTRI to compare 8 16-bit integers at once.
   // _SIDD_UWORD_OPS: treat the data as 16-bit integers
   // _SIDD_CMP_EQUAL_ANY: check for equality with any
   // _SIDD_LEAST_SIGNIFICANT: start comparison from least significant bit
@@ -29,7 +29,10 @@ bool has_self_loop__pcmpistri(uint16_t vertex, uint16_t *neighbors, uint16_t num
   for (uint16_t i = 0; i < num_neighbors; i += 8) {
     __m128i neighbor_vec = _mm_loadu_si128((__m128i *)&neighbors[i]);
 
+    // we can use this (faster) version if we know the ids of the vertices are 1-based
     int result = _mm_cmpistri(vertex_vec, neighbor_vec, FLAGS);
+
+    // we have to use this (slightly slower) version if ids of the vertices might be 0
     // int result = _mm_cmpestri(vertex_vec, 1, neighbor_vec, 8, FLAGS);
 
     if (result != 8) {
@@ -37,7 +40,7 @@ bool has_self_loop__pcmpistri(uint16_t vertex, uint16_t *neighbors, uint16_t num
     }
   }
 
-  return false;  // No match found
+  return false;
 }
 
 
