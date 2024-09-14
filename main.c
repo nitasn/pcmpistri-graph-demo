@@ -34,7 +34,8 @@ graph_t make_test_graph() {
 bool prompt_boolean_question(const char *question) {
   char input;
   while (true) {
-    printf("%s [y, n] > ", question);
+    printf("%s\n", question);
+    printf("[y, n] > ", question);
     scanf(" %c", &input);
     input = tolower(input);
     if (input != 'y' && input != 'n') {
@@ -60,6 +61,7 @@ int main(void) {
 
     char input;
     scanf(" %c", &input);
+    printf("\n");
 
     if (input == '1') {
       printf("Insert node-id and neighbor-index: \n\n");
@@ -82,7 +84,7 @@ int main(void) {
     }
 
     else if (input == '3') {
-      printf("Existing... \n\n");
+      printf("Existing... \n");
       break;
     }
 
