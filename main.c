@@ -35,7 +35,7 @@ bool prompt_boolean_question(const char *question) {
   char input;
   while (true) {
     printf("%s\n", question);
-    printf("[y, n] > ", question);
+    printf("[y, n] > ");
     scanf(" %c", &input);
     input = tolower(input);
     if (input != 'y' && input != 'n') {
