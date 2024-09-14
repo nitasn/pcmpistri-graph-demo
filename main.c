@@ -3,7 +3,7 @@
 
 #include <ctype.h> // for tolower
 
-// result graph does not contain loops
+// initialize a dummy big graph that doesn't have self-loops
 graph_t make_test_graph() {
   const int NUM_VERTICES = 65000;
   const int NUM_NEIGHBORS_EACH = 64000;
@@ -37,6 +37,7 @@ bool prompt_boolean_question(const char *question) {
     printf("%s\n", question);
     printf("[y, n] > ");
     scanf(" %c", &input);
+    printf("\n");
     input = tolower(input);
     if (input != 'y' && input != 'n') {
       printf("invalid respond...\n");
@@ -47,7 +48,7 @@ bool prompt_boolean_question(const char *question) {
 }
 
 int main(void) {
-  printf("Initializing graph withot self-loops... \n\n");
+  printf("Initializing graph without self-loops... \n\n");
   graph_t graph = make_test_graph();
 
   while (true) {
@@ -55,7 +56,7 @@ int main(void) {
       "Choose: \n"
       "[1] Make a new self-loop in the graph \n"
       "[2] Run a self-loop detection algorithm \n"
-      "[3] Exit \n\n"
+      "[3] Exit \n"
       " > "
     );
 
@@ -64,13 +65,14 @@ int main(void) {
     printf("\n");
 
     if (input == '1') {
-      printf("Insert node-id and neighbor-index: \n\n");
+      printf("Insert node-id and neighbor-index: \n");
 
       int node_id, neighbor_index;
       scanf(" %d %d", &node_id, &neighbor_index);
-      graph.adjacencies[node_id][neighbor_index] = node_id;
+      printf("\n");
 
-      printf("Done. Now node %d's %d'th neighbor is %d itself. \n\n", node_id, neighbor_index, node_id);
+      graph.adjacencies[node_id][neighbor_index] = node_id;
+      printf("Done. Now node %d's %d'th neighbor is node %d itself. \n\n", node_id, neighbor_index, node_id);
     }
 
     else if (input == '2') {
