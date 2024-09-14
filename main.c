@@ -3,8 +3,8 @@
 
 #include <ctype.h> // for tolower
 
-
-graph_t make_test_graph(bool should_have_self_loop) {
+// result graph does not contain loops
+graph_t make_test_graph() {
   const int NUM_VERTICES = 65000;
   const int NUM_NEIGHBORS_EACH = 64000;
 
@@ -28,11 +28,6 @@ graph_t make_test_graph(bool should_have_self_loop) {
     }
   }
 
-  if (should_have_self_loop) {
-    unsigned short vertex = NUM_VERTICES - 1;
-    graph.adjacencies[vertex][NUM_NEIGHBORS_EACH - 1] = vertex;
-  }
-
   return graph;
 }
 
@@ -51,17 +46,39 @@ bool prompt_boolean_question(const char *question) {
 }
 
 int main(void) {
-  bool should_have_self_loop = prompt_boolean_question("Should the graph have a self-loop?");
-  bool should_use_pcmpistri = prompt_boolean_question("Should the algorithm use PCMPISTRI?");
+  printf("Initializing graph withot self-loops... \n\n");
+  graph_t graph = make_test_graph();
 
-  graph_t graph = make_test_graph(should_have_self_loop);
+  printf(
+    "Choose: \n"
+    "1. Make a new self-loop in the graph \n"
+    "2. Run a self-loop detection algorithm \n"
+    "3. Exit \n\n"
+  );
 
-  START_TIMER(Algorithm);
-  bool algo_result = graph_has_self_loop(graph, should_use_pcmpistri);
-  PRINT_TIMER(Algorithm);
+  char input;
+  scanf(" %c", &input);
 
-  printf("Self-loop(s) %s\n", algo_result ? "DETECTED" : "NOT detected");
-  
+  if (input == '1') {
+    printf("Insert node-id and neighbor-index: \n\n");
+
+    int node_id, neighbor_index;
+    scanf(" %d %d", &node_id, &neighbor_index);
+    graph.adjacencies[node_id][neighbor_index] = node_id;
+
+    printf("Done. Now node %d's %d'th neighbor is %d itself. \n\n", node_id, neighbor_index, node_id);
+  }
+
+  if (input == '2') {
+    bool should_use_pcmpistri = prompt_boolean_question("Should the algorithm use PCMPISTRI?");
+
+    START_TIMER(Algorithm);
+    bool algo_result = graph_has_self_loop(graph, should_use_pcmpistri);
+    PRINT_TIMER(Algorithm);
+
+    printf("Self-loop(s) %s\n", algo_result ? "DETECTED" : "NOT detected");
+  }
+
   free_graph(graph);
   return 0;
 }
