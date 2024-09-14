@@ -4,8 +4,8 @@
 #include <smmintrin.h>  // for SSE4.2
 
 
-bool has_self_loop__naive(uint16_t vertex, uint16_t *neighbors, uint16_t num_neighbors) {
-  for (uint16_t i = 0; i < num_neighbors; ++i) {
+bool has_self_loop__naive(unsigned short vertex, int *neighbors, int num_neighbors) {
+  for (int i = 0; i < num_neighbors; ++i) {
     if (neighbors[i] == vertex) {
       return true;
     }
@@ -13,7 +13,7 @@ bool has_self_loop__naive(uint16_t vertex, uint16_t *neighbors, uint16_t num_nei
   return false;
 }
 
-bool has_self_loop__pcmpistri(uint16_t vertex, uint16_t *neighbors, uint16_t num_neighbors) {
+bool has_self_loop__pcmpistri(unsigned short vertex, int *neighbors, int num_neighbors) {
   // For simplicity, assume each vertex's num_neighbors is a multiple of 8
   assert(num_neighbors % 8 == 0);
 
@@ -26,7 +26,7 @@ bool has_self_loop__pcmpistri(uint16_t vertex, uint16_t *neighbors, uint16_t num
   // _SIDD_LEAST_SIGNIFICANT: start comparison from least significant bit
   #define FLAGS _SIDD_UWORD_OPS | _SIDD_CMP_EQUAL_ANY | _SIDD_LEAST_SIGNIFICANT
 
-  for (uint16_t i = 0; i < num_neighbors; i += 8) {
+  for (int i = 0; i < num_neighbors; i += 8) {
     __m128i neighbor_vec = _mm_loadu_si128((__m128i *)&neighbors[i]);
 
     // we can use this (faster) version if we know the ids of the vertices are 1-based
@@ -46,11 +46,11 @@ bool has_self_loop__pcmpistri(uint16_t vertex, uint16_t *neighbors, uint16_t num
 
 bool graph_has_self_loop(graph_t graph, bool should_use_pcmpistri) {
 
-  bool (*has_self_loop)(uint16_t, uint16_t*, uint16_t) =
+  bool (*has_self_loop)(unsigned short, int*, int) =
     should_use_pcmpistri ? has_self_loop__pcmpistri : has_self_loop__naive;
 
-  for (uint16_t v = 0; v < graph.num_vertices; ++v) {
-    uint16_t num_neighbors = graph.arrays_lengths[v];
+  for (int v = 0; v < graph.num_vertices; ++v) {
+    int num_neighbors = graph.arrays_lengths[v];
 
     if (has_self_loop(v, graph.adjacencies[v], num_neighbors)) {
       return true;
@@ -61,7 +61,7 @@ bool graph_has_self_loop(graph_t graph, bool should_use_pcmpistri) {
 }
 
 void free_graph(graph_t graph) {
-  for (uint16_t i = 0; i < graph.num_vertices; ++i) {
+  for (int i = 0; i < graph.num_vertices; ++i) {
     free(graph.adjacencies[i]);
   }
   free(graph.adjacencies);

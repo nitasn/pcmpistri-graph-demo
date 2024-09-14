@@ -5,31 +5,31 @@
 
 
 graph_t make_test_graph(bool should_have_self_loop) {
-  const uint16_t NUM_VERTICES = 65000;
-  const uint16_t NUM_NEIGHBORS_EACH = 64000;
+  const NUM_VERTICES = 65000;
+  const NUM_NEIGHBORS_EACH = 64000;
 
   graph_t graph = {
-    .adjacencies = malloc(NUM_VERTICES * sizeof(uint16_t *)),
+    .adjacencies = malloc(NUM_VERTICES * sizeof(unsigned short *)),
     .num_vertices = NUM_VERTICES,
-    .arrays_lengths = malloc(NUM_VERTICES * sizeof(uint16_t))
+    .arrays_lengths = malloc(NUM_VERTICES * sizeof(int))
   };
 
   if (!graph.adjacencies || !graph.arrays_lengths) {
     PANIC("malloc failed\n");
   }
 
-  for (uint16_t v = 0; v < NUM_VERTICES; ++v) {
-    if (!(graph.adjacencies[v] = malloc(NUM_NEIGHBORS_EACH * sizeof(uint16_t)))) {
+  for (int v = 0; v < NUM_VERTICES; ++v) {
+    if (!(graph.adjacencies[v] = malloc(NUM_NEIGHBORS_EACH * sizeof(unsigned short)))) {
       PANIC("malloc failed\n");
     }
     graph.arrays_lengths[v] = NUM_NEIGHBORS_EACH;
-    for (uint16_t n = 0; n < NUM_NEIGHBORS_EACH; ++n) {
+    for (int n = 0; n < NUM_NEIGHBORS_EACH; ++n) {
       graph.adjacencies[v][n] = ((v + n) % NUM_VERTICES) + 1;
     }
   }
 
   if (should_have_self_loop) {
-    uint16_t vertex = NUM_VERTICES - 1;
+    unsigned short vertex = NUM_VERTICES - 1;
     graph.adjacencies[vertex][NUM_NEIGHBORS_EACH - 1] = vertex;
   }
 
