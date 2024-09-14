@@ -5,8 +5,8 @@
 
 
 graph_t make_test_graph(bool should_have_self_loop) {
-  const NUM_VERTICES = 65000;
-  const NUM_NEIGHBORS_EACH = 64000;
+  const int NUM_VERTICES = 65000;
+  const int NUM_NEIGHBORS_EACH = 64000;
 
   graph_t graph = {
     .adjacencies = malloc(NUM_VERTICES * sizeof(unsigned short *)),

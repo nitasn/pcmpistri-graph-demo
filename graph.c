@@ -4,7 +4,7 @@
 #include <smmintrin.h>  // for SSE4.2
 
 
-bool has_self_loop__naive(unsigned short vertex, int *neighbors, int num_neighbors) {
+bool has_self_loop__naive(unsigned short vertex, unsigned short *neighbors, int num_neighbors) {
   for (int i = 0; i < num_neighbors; ++i) {
     if (neighbors[i] == vertex) {
       return true;
@@ -13,7 +13,7 @@ bool has_self_loop__naive(unsigned short vertex, int *neighbors, int num_neighbo
   return false;
 }
 
-bool has_self_loop__pcmpistri(unsigned short vertex, int *neighbors, int num_neighbors) {
+bool has_self_loop__pcmpistri(unsigned short vertex, unsigned short *neighbors, int num_neighbors) {
   // For simplicity, assume each vertex's num_neighbors is a multiple of 8
   assert(num_neighbors % 8 == 0);
 
@@ -46,7 +46,7 @@ bool has_self_loop__pcmpistri(unsigned short vertex, int *neighbors, int num_nei
 
 bool graph_has_self_loop(graph_t graph, bool should_use_pcmpistri) {
 
-  bool (*has_self_loop)(unsigned short, int*, int) =
+  bool (*has_self_loop)(unsigned short, unsigned short*, int) =
     should_use_pcmpistri ? has_self_loop__pcmpistri : has_self_loop__naive;
 
   for (int v = 0; v < graph.num_vertices; ++v) {
