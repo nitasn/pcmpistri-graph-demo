@@ -3,7 +3,7 @@
 
 #include <ctype.h> // for tolower
 
-// initialize a dummy big graph that doesn't have self-loops
+// a big dummy graph with no self-loops
 graph_t make_test_graph() {
   const int NUM_VERTICES = 65000;
   const int NUM_NEIGHBORS_EACH = 64000;
@@ -72,12 +72,13 @@ int main(void) {
       printf("\n");
 
       graph.adjacencies[node_id][neighbor_index] = node_id;
-      printf("Done. Now node %d's %d'th neighbor is node %d itself. \n\n", node_id, neighbor_index, node_id);
+      printf("Done. Now node %d's %d'th neighbor is %d itself. \n\n", node_id, neighbor_index, node_id);
     }
 
     else if (input == '2') {
       bool should_use_pcmpistri = prompt_boolean_question("Should the algorithm use PCMPISTRI?");
 
+      printf("Algoirthm runs...\n");
       START_TIMER(Algorithm);
       bool algo_result = graph_has_self_loop(graph, should_use_pcmpistri);
       PRINT_TIMER(Algorithm);
