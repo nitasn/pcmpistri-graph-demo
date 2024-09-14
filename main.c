@@ -2,6 +2,8 @@
 #include "common.h"
 
 #include <ctype.h> // for tolower
+#include <unistd.h> // for sleep
+
 
 // a big dummy graph with no self-loops
 graph_t make_test_graph() {
@@ -94,6 +96,8 @@ int main(void) {
     else {
       printf("Invalid option. \n\n");
     }
+
+    sleep(2);
   }
 
   free_graph(graph);
