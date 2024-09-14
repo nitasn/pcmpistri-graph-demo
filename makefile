@@ -1,5 +1,4 @@
 CC = gcc
-AS = as
 CFLAGS = -Wall -Wextra -m64 -msse4.2
 LDFLAGS = 
 
