@@ -1,6 +1,6 @@
 CC = gcc
 AS = as
-CFLAGS = -Wall -Wextra -O0 -m64 -msse4.2
+CFLAGS = -Wall -Wextra -m64 -msse4.2
 LDFLAGS = 
 
 SRC = $(wildcard *.c)
