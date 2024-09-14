@@ -14,10 +14,10 @@ bool has_self_loop__naive(unsigned short vertex, unsigned short *neighbors, int 
 }
 
 bool has_self_loop__pcmpistri(unsigned short vertex, unsigned short *neighbors, int num_neighbors) {
-  // For simplicity, assume each vertex's num_neighbors is a multiple of 8
+  // for simplicity, assume each vertex's num_neighbors is a multiple of 8
   assert(num_neighbors % 8 == 0);
 
-  // Create a vector with the vertex ID in the least significant 16 bits
+  // load the vertex ID into (the least significant 16 bits of) some xmm register
   __m128i vertex_vec = _mm_set1_epi16(vertex);
 
   // We'll use PCMPISTRI to compare 8 16-bit integers at once.
@@ -32,7 +32,7 @@ bool has_self_loop__pcmpistri(unsigned short vertex, unsigned short *neighbors, 
     // we can use this (faster) version if we know the ids of the vertices are 1-based
     int result = _mm_cmpistri(vertex_vec, neighbor_vec, FLAGS);
 
-    // we have to use this (slightly slower) version if ids of the vertices might be 0
+    // we have to use this (slightly slower) version if the ids of the vertices might be 0-based
     // int result = _mm_cmpestri(vertex_vec, 1, neighbor_vec, 8, FLAGS);
 
     if (result != 8) {
