@@ -50,7 +50,8 @@ bool prompt_boolean_question(const char *question) {
 }
 
 void wait_for_newline() {
-  while (getchar() != '\n')
+  int c;
+  while ((c = getchar()) != '\n' && c != EOF)
     ;
 }
 
