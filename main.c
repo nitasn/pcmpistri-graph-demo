@@ -34,7 +34,7 @@ graph_t make_test_graph() {
 bool prompt_boolean_question(const char *question) {
   char input;
   while (true) {
-    printf("%s [y, n] ", question);
+    printf("%s [y, n] > ", question);
     scanf(" %c", &input);
     input = tolower(input);
     if (input != 'y' && input != 'n') {
@@ -49,34 +49,46 @@ int main(void) {
   printf("Initializing graph withot self-loops... \n\n");
   graph_t graph = make_test_graph();
 
-  printf(
-    "Choose: \n"
-    "1. Make a new self-loop in the graph \n"
-    "2. Run a self-loop detection algorithm \n"
-    "3. Exit \n\n"
-  );
+  while (true) {
+    printf(
+      "Choose: \n"
+      "[1] Make a new self-loop in the graph \n"
+      "[2] Run a self-loop detection algorithm \n"
+      "[3] Exit \n\n"
+      " > "
+    );
 
-  char input;
-  scanf(" %c", &input);
+    char input;
+    scanf(" %c", &input);
 
-  if (input == '1') {
-    printf("Insert node-id and neighbor-index: \n\n");
+    if (input == '1') {
+      printf("Insert node-id and neighbor-index: \n\n");
 
-    int node_id, neighbor_index;
-    scanf(" %d %d", &node_id, &neighbor_index);
-    graph.adjacencies[node_id][neighbor_index] = node_id;
+      int node_id, neighbor_index;
+      scanf(" %d %d", &node_id, &neighbor_index);
+      graph.adjacencies[node_id][neighbor_index] = node_id;
 
-    printf("Done. Now node %d's %d'th neighbor is %d itself. \n\n", node_id, neighbor_index, node_id);
-  }
+      printf("Done. Now node %d's %d'th neighbor is %d itself. \n\n", node_id, neighbor_index, node_id);
+    }
 
-  if (input == '2') {
-    bool should_use_pcmpistri = prompt_boolean_question("Should the algorithm use PCMPISTRI?");
+    else if (input == '2') {
+      bool should_use_pcmpistri = prompt_boolean_question("Should the algorithm use PCMPISTRI?");
 
-    START_TIMER(Algorithm);
-    bool algo_result = graph_has_self_loop(graph, should_use_pcmpistri);
-    PRINT_TIMER(Algorithm);
+      START_TIMER(Algorithm);
+      bool algo_result = graph_has_self_loop(graph, should_use_pcmpistri);
+      PRINT_TIMER(Algorithm);
 
-    printf("Self-loop(s) %s\n", algo_result ? "DETECTED" : "NOT detected");
+      printf("Self-loop(s) %s\n\n", algo_result ? "DETECTED" : "NOT detected");
+    }
+
+    else if (input == '3') {
+      printf("Existing... \n\n");
+      break;
+    }
+
+    else {
+      printf("Invalid option. \n\n");
+    }
   }
 
   free_graph(graph);
