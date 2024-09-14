@@ -49,6 +49,11 @@ bool prompt_boolean_question(const char *question) {
   }
 }
 
+void wait_for_newline() {
+  while (getchar() != '\n')
+    ;
+}
+
 int main(void) {
   printf("Initializing graph without self-loops... \n\n");
   graph_t graph = make_test_graph();
@@ -97,7 +102,7 @@ int main(void) {
       printf("Invalid option. \n\n");
     }
 
-    sleep(2);
+    wait_for_newline();
   }
 
   free_graph(graph);
